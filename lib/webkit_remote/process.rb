@@ -203,6 +203,15 @@ class Process
           break
         end
       end
+    when /cygwin|mswin|mingw|bccwin|wince|emx/
+      require('win32/registry')
+      if(Win32)
+        begin
+          chrome = Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe')
+          @chrome_binary = chrome[""]
+        rescue Win32::Registry::Error => win32_reg_err
+        end
+      end
     else
       raise "Unsupported platform #{RUBY_PLATFORM}"
     end
